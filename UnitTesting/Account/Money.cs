@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace UnitTesting.Account;
 
-namespace UnitTesting
+public class Money
 {
-    public class Money
-    {
-        public int Amount { get; }
+    public int Amount { get; }
 
-        public Money(int amount)
-        {
-            Amount = amount;
-        }
+    public Money(int amount)
+    {
+        Amount = amount;
     }
 }

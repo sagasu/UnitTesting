@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
+using UnitTesting.Account;
+using UnitTesting.User;
 
 namespace UnitTesting
 {
@@ -8,11 +11,14 @@ namespace UnitTesting
     public class AccountProviderTests
     {
         [TestMethod]
-        public void GetAllAccounts_ThatAreActive_OnlyActiveAccountsReturned()
+        public void GetAccounts_ThatAreActive_OnlyActiveAccountsReturned()
         {
             //A
             const bool isActive = true;
-            var userProvider = new UserProvider();
+            var depOne = new Mock<IDependencyOne>();
+            var depTwo = new Mock<IDependencyTwo>();
+            var depThree = new Mock<IDbProvider>();
+            var userProvider = new UserProvider(depOne.Object, depTwo.Object, depThree.Object);
             var anyAmount = 2;
             var money = new Money(anyAmount);
 
@@ -24,7 +30,7 @@ namespace UnitTesting
         }
 
         [TestMethod]
-        public void GetAllAccounts_ThatAreActive_OnlyActiveAccountsAreReturned()
+        public void GetAccounts_ThatAreActive_OnlyActiveAccountsAreReturned()
         {
             const bool isActive = true;
 
@@ -33,9 +39,12 @@ namespace UnitTesting
             Assert.IsTrue(activeAccounts.All(x => x.IsActive));
         }
 
-        private static IEnumerable<Account> GetActiveAccounts(bool isActive)
+        private static IEnumerable<Account.Account> GetActiveAccounts(bool isActive)
         {
-            var userProvider = new UserProvider();
+            var depOne = new Mock<IDependencyOne>();
+            var depTwo = new Mock<IDependencyTwo>();
+            var depThree = new Mock<IDbProvider>();
+            var userProvider = new UserProvider(depOne.Object, depTwo.Object, depThree.Object);
             var anyPositiveAmount = 2;
             var money = new Money(anyPositiveAmount);
 

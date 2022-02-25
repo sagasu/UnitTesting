@@ -1,11 +1,25 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnitTesting
+namespace UnitTesting.User
 {
-    public class UserProvider
+    public interface IUserProvider
     {
-        public IEnumerable<User> GetAllUsers()
+        IEnumerable<User> GetAllUsers();
+        IEnumerable<User> GetAllUsers(bool isActive);
+        IEnumerable<User> GetAllUsers(bool isActive,bool isHaveMoney, bool isOld);
+        IEnumerable<User> GetAllUsersFromDb();
+    }
+
+    public class UserProvider : IUserProvider
+    {
+        private readonly IDbProvider _three;
+        public UserProvider(IDependencyOne one, IDependencyTwo two, IDbProvider three)
+        {
+            _three = three;
+        }
+
+        public IEnumerable<UnitTesting.User.User> GetAllUsers()
         {
             yield return new User(true, true, false);
             yield return new User(true, false, true);
@@ -25,5 +39,11 @@ namespace UnitTesting
         {
             return GetAllUsers().Where(x => x.IsActive == isActive && x.IsHaveMoney == isHaveMoney && x.IsOld == isOld);
         }
+
+        public IEnumerable<User> GetAllUsersFromDb()
+        {
+            yield return new User(true, true, false);
+        }
+
     }
 }

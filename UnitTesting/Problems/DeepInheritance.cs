@@ -1,51 +1,48 @@
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace UnitTesting.Problems;
 
-namespace UnitTesting
+public class Animal
 {
-    public class Animal
+    public int AnimalSum(int a)
     {
-        public int AnimalSum(int a)
-        {
-            return a;
-        }
-
-        public int BasicSum(int a)
-        {
-            return a + 1;
-        }
+        return a;
     }
 
-    public class Mammal : Animal
+    public int BasicSum(int a)
     {
-        public int MammalSum(int a)
-        {
-            return base.BasicSum(a);
-        }
+        return a + 1;
+    }
+}
 
-        public new virtual int BasicSum(int a)
-        {
-            return a + 2;
-        }
+public class Mammal : Animal
+{
+    public int MammalSum(int a)
+    {
+        return base.BasicSum(a);
     }
 
-    public class Dog : Mammal
+    public new virtual int BasicSum(int a)
     {
-        public int DogSum(int a)
-        {
-            return a;
-        }
+        return a + 2;
+    }
+}
 
-        public override int BasicSum(int a)
-        {
-            return a + 2;
-        }
+public class Dog : Mammal
+{
+    public int DogSum(int a)
+    {
+        return a;
     }
 
-    public class Beagle : Dog
+    public override int BasicSum(int a)
     {
-        public int Sum(int a)
-        {
-            return base.MammalSum(a);
-        }
+        return a + 2;
+    }
+}
+
+public class Beagle : Dog
+{
+    public int Sum(int a)
+    {
+        return base.MammalSum(a);
     }
 }

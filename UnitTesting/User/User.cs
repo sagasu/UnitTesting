@@ -1,4 +1,4 @@
-namespace UnitTesting
+namespace UnitTesting.User
 {
     public class User
     {
