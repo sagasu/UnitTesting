@@ -9,6 +9,7 @@ namespace UnitTesting.User
         IEnumerable<User> GetAllUsers(bool isActive);
         IEnumerable<User> GetAllUsers(bool isActive,bool isHaveMoney, bool isOld);
         IEnumerable<User> GetAllUsersFromDb();
+        User GetOldestUser();
     }
 
     public class UserProvider : IUserProvider
@@ -19,15 +20,23 @@ namespace UnitTesting.User
             _three = three;
         }
 
+        public static User OldestUser => new User(true, true, true);
+
         public IEnumerable<UnitTesting.User.User> GetAllUsers()
         {
             yield return new User(true, true, false);
             yield return new User(true, false, true);
-            yield return new User(true, true, true);
+            yield return OldestUser;
             yield return new User(false, false, false);
             yield return new User(false, true, true);
             yield return new User(false, true, true);
             yield return new User(true, true, true);
+        }
+
+        public User GetOldestUser()
+        {
+            // Some logic here
+            return OldestUser;
         }
 
         public IEnumerable<User> GetAllUsers(bool isActive)

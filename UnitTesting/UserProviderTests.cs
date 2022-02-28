@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using UnitTesting.User;
@@ -21,15 +20,22 @@ namespace UnitTesting
         }
 
         [TestMethod]
-        public void GetAllUsers_ThatAreActiveHaveMoneyAndAreOld_OnlyActiveWithMoneyOldUsersReturned()
+        public void GetAllUsers_ThatAreOld_OnlyOldUsersReturned()
         {
-            const bool isActive = true; 
-            const bool isHaveMoney = true; 
-            const bool isOld = true; 
+            const bool isOld = true;
 
-            var activeUsers = GetUserProvider().GetAllUsers(isActive, isHaveMoney, isOld);
+            var oldUsers = GetUsers(isOld);
 
-            Assert.IsTrue(activeUsers.All(IsActiveHaveMoneyIsOld));
+            Assert.IsTrue(oldUsers.All(x => x.IsOld));
+        }
+
+
+        [TestMethod]
+        public void GetOldestUser_OldestUserDefined_ReturnsOldestUser()
+        {
+            var oldestUser = GetUserProvider().GetOldestUser();
+
+            Assert.IsTrue(IsHomomorphicEqual(UserProvider.OldestUser, oldestUser));
         }
 
         [TestMethod]
@@ -41,6 +47,16 @@ namespace UnitTesting
             users.Object.GetAllUsersFromDb();
 
             users.Verify(provider => provider.GetAllUsersFromDb(), Times.Once);
+        }
+
+        private IEnumerable<User.User> GetUsers(bool isOld)
+        {
+            return GetUserProvider().GetAllUsers().Where(x=>x.IsOld == isOld);
+        }
+
+        private bool IsHomomorphicEqual(User.User a, User.User b)
+        {
+            return a.IsActive == b.IsActive && a.IsHaveMoney == b.IsHaveMoney && a.IsOld == b.IsOld;
         }
 
         private bool IsActiveHaveMoneyIsOld(User.User user)
