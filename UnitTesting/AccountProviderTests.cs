@@ -17,10 +17,10 @@ namespace UnitTesting
             const bool isActive = true;
             var depOne = new Mock<IDependencyOne>();
             var depTwo = new Mock<IDependencyTwo>();
-            var depThree = new Mock<IDbProvider>();
-            var userProvider = new UserProvider(depOne.Object, depTwo.Object, depThree.Object);
-            var anyAmount = 2;
-            var money = new Money(anyAmount);
+            var dbProvider = new Mock<IDbProvider>();
+            var userProvider = new UserProvider(depOne.Object, depTwo.Object, dbProvider.Object);
+            var anyPositiveAmount = 2;
+            var money = new Money(anyPositiveAmount);
 
             //A
             var activeAccounts = new AccountProvider().GetAccounts(userProvider, money, isActive);
@@ -43,8 +43,8 @@ namespace UnitTesting
         {
             var depOne = new Mock<IDependencyOne>();
             var depTwo = new Mock<IDependencyTwo>();
-            var depThree = new Mock<IDbProvider>();
-            var userProvider = new UserProvider(depOne.Object, depTwo.Object, depThree.Object);
+            var dbProvider = new Mock<IDbProvider>();
+            var userProvider = new UserProvider(depOne.Object, depTwo.Object, dbProvider.Object);
             var anyPositiveAmount = 2;
             var money = new Money(anyPositiveAmount);
 

@@ -22,7 +22,7 @@ namespace UnitTesting.User
 
         public static User OldestUser => new User(true, true, true);
 
-        public IEnumerable<UnitTesting.User.User> GetAllUsers()
+        public IEnumerable<User> GetAllUsers()
         {
             yield return new User(true, true, false);
             yield return new User(true, false, true);
