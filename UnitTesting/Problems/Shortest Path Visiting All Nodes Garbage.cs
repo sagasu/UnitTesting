@@ -4,8 +4,16 @@ using System.Linq;
 
 namespace UnitTesting.Problems
 {
-
-    internal class Shortest_Path_Visiting_All_Nodes_Garbage
+    public interface IShortest_Path_Visiting_All_Nodes_Garbage
+    {
+        int ShortestPathLength(int[][] graph);
+    }
+    public interface IShortest_Path_Visiting_All_Nodes_Garbage_Tests
+    {
+        int ShortestPathLength(int[][] graph);
+        int Foo(int[][] graph, List<int> candidates);
+    }
+    internal class Shortest_Path_Visiting_All_Nodes_Garbage : IShortest_Path_Visiting_All_Nodes_Garbage, IShortest_Path_Visiting_All_Nodes_Garbage_Tests
     {
         // https://leetcode.com/problems/shortest-path-visiting-all-nodes/
         // Not my solution but true garbage
@@ -13,11 +21,19 @@ namespace UnitTesting.Problems
         Dictionary<int, int> parentChild;
         int min = int.MaxValue;
 
+        public List<int> candidates2 { get; set; }
+
         public int ShortestPathLength(int[][] graph)
         {
             _graph = new Dictionary<int, List<int>>();
             parentChild = new Dictionary<int, int>();
             var candidates = new List<int>();
+            
+            return Foo(graph, candidates);
+        }
+
+        public int Foo(int[][] graph, List<int> candidates)
+        {
             min = int.MaxValue;
             for (var i = 0; i < graph.Length; i++)
             {
@@ -26,18 +42,21 @@ namespace UnitTesting.Problems
                 {
                     candidates.Add(i);
                 }
+
                 _graph[i] = graph[i].ToList();
             }
+
             if (candidates.Count == 0)
             {
                 return graph.Length - 1;
             }
+
             foreach (var i in candidates)
             {
                 parentChild = new Dictionary<int, int>();
                 Dfs(-1, i, graph.Length, new HashSet<int>(), 0, false);
-
             }
+
             return min;
         }
 

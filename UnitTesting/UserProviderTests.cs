@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using UnitTesting.Problems;
 using UnitTesting.User;
 
 namespace UnitTesting
@@ -9,6 +10,53 @@ namespace UnitTesting
     [TestClass]
     public class UserProviderTests
     {
+        [TestMethod]
+        public void GetAllUsersFromDB_DefaultConfig_CallsDBProvider2()
+        {
+            var users = new Mock<IShortest_Path_Visiting_All_Nodes_Garbage_Tests>();
+
+            var someGraph = new int[2][];
+            users.Setup(provider => provider.ShortestPathLength(someGraph)).Returns(1);
+
+            users.Object.ShortestPathLength(someGraph);
+
+            users.Verify(provider => provider.Foo(someGraph, new List<int>()), Times.Once);
+        }
+
+        [TestMethod]
+        public void GetAllUsersFromDB_DefaultConfig_CallsDBProvider3()
+        {
+            var users = new Mock<IShortest_Path_Visiting_All_Nodes_Garbage_Tests>();
+
+            var someGraph = new int[2][];
+            var anyList = new List<int>();
+
+            users.Setup(provider => provider.ShortestPathLength(someGraph)).Returns(1);
+            users.Setup(provider => provider.Foo(someGraph, anyList)).Returns(1);
+
+            users.Object.ShortestPathLength(someGraph);
+            users.Object.Foo(someGraph,anyList);
+
+            users.Verify(provider => provider.Foo(someGraph, anyList), Times.Once);
+        }
+        
+        [TestMethod]
+        public void GetAllUsersFromDB_DefaultConfig_CallsDBProvider4()
+        {
+            var users = new Mock<IShortest_Path_Visiting_All_Nodes_Garbage_Tests>();
+
+            var someGraph = new int[2][];
+            var anyList = new List<int>();
+
+            users.Setup(provider => provider.ShortestPathLength(someGraph)).Returns(1);
+            users.Setup(provider => provider.Foo(someGraph, anyList)).Returns(1);
+
+            users.Object.ShortestPathLength(someGraph);
+            users.Object.Foo(someGraph,anyList);
+
+            users.Verify(provider => provider.Foo(someGraph, anyList), Times.Once);
+        }
+
         [TestMethod]
         public void GetAllUsers_ThatAreActive_OnlyActiveUsersReturned()
         {
