@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnitTesting.Problems
+namespace UnitTesting.Problems.Inheritance
 {
     public interface IShortest_Path_Visiting_All_Nodes_Garbage
     {

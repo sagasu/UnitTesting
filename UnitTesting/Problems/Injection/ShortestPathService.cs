@@ -2,48 +2,28 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnitTesting.Problems
+namespace UnitTesting.Problems.Injection
 {
-    public interface IShortest_Path_Visiting_All_Nodes_Garbage
+    public interface IShortestPathService
     {
-        int ShortestPathLength(int[][] graph);
+        int CalculateShortestPath(int[][] graph, List<int> candidates, Dictionary<int, List<int>> dicGraph, Dictionary<int, int> parentChild);
     }
-    public interface IShortest_Path_Visiting_All_Nodes_Garbage_Tests
+
+    public class ShortestPathService : IShortestPathService
     {
-        int ShortestPathLength(int[][] graph);
-        int CalculateShortestPath(int[][] graph, List<int> candidates);
-    }
-    internal class Shortest_Path_Visiting_All_Nodes_Garbage : IShortest_Path_Visiting_All_Nodes_Garbage, IShortest_Path_Visiting_All_Nodes_Garbage_Tests
-    {
-        // https://leetcode.com/problems/shortest-path-visiting-all-nodes/
-        // Not my solution but true garbage
-        Dictionary<int, List<int>> _graph;
-        Dictionary<int, int> parentChild;
         int min = int.MaxValue;
-
-        public List<int> candidates2 { get; set; }
-
-        public int ShortestPathLength(int[][] graph)
-        {
-            _graph = new Dictionary<int, List<int>>();
-            parentChild = new Dictionary<int, int>();
-            var candidates = new List<int>();
-            
-            return CalculateShortestPath(graph, candidates);
-        }
-
-        public int CalculateShortestPath(int[][] graph, List<int> candidates)
+        public int CalculateShortestPath(int[][] graph, List<int> candidates, Dictionary<int, List<int>> dicGraph, Dictionary<int, int> parentChild)
         {
             min = int.MaxValue;
             for (var i = 0; i < graph.Length; i++)
             {
-                _graph.Add(i, new List<int>());
+                dicGraph.Add(i, new List<int>());
                 if (graph[i].Length == 1)
                 {
                     candidates.Add(i);
                 }
 
-                _graph[i] = graph[i].ToList();
+                dicGraph[i] = graph[i].ToList();
             }
 
             if (candidates.Count == 0)
@@ -54,14 +34,14 @@ namespace UnitTesting.Problems
             foreach (var i in candidates)
             {
                 parentChild = new Dictionary<int, int>();
-                Dfs(-1, i, graph.Length, new HashSet<int>(), 0, false);
+                Dfs(-1, i, graph.Length, new HashSet<int>(), 0, false, dicGraph, parentChild);
             }
 
             return min;
         }
 
 
-        public bool Dfs(int parent, int current, int N, HashSet<int> seen, int cost, bool rec)
+        public bool Dfs(int parent, int current, int N, HashSet<int> seen, int cost, bool rec, Dictionary<int, List<int>> dicGraph, Dictionary<int, int> parentChild)
         {
             seen.Add(current);
             if (!parentChild.ContainsKey(current))
@@ -76,16 +56,16 @@ namespace UnitTesting.Problems
                 return true;
             }
             var res = false;
-            foreach (var nghr in _graph[current])
+            foreach (var nghr in dicGraph[current])
             {
                 if (!seen.Contains(nghr) && nghr != parent)
                 {
-                    res |= Dfs(current, nghr, N, seen, cost + 1, false);
+                    res |= Dfs(current, nghr, N, seen, cost + 1, false, dicGraph, parentChild);
                 }
             }
             if (!res && parentChild.ContainsKey(parent))
             {
-                res = Dfs(parentChild[parent], parent, N, seen, cost + 1, true);
+                res = Dfs(parentChild[parent], parent, N, seen, cost + 1, true, dicGraph, parentChild);
                 if (!rec)
                 {
                     seen.Remove(current);

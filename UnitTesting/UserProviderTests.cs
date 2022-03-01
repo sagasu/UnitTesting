@@ -3,6 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using UnitTesting.Problems;
+using UnitTesting.Problems.Injection;
 using UnitTesting.User;
 
 namespace UnitTesting
@@ -20,24 +21,27 @@ namespace UnitTesting
 
             users.Object.ShortestPathLength(someGraph);
 
-            users.Verify(provider => provider.Foo(someGraph, new List<int>()), Times.Once);
+            users.Verify(provider => provider.CalculateShortestPath(someGraph, new List<int>()), Times.Once);
         }
 
+        // This is an example of something that shouldn't be tested, because we are testing flow/state and not behaviour.
         [TestMethod]
-        public void GetAllUsersFromDB_DefaultConfig_CallsDBProvider3()
+        public void ShortestPathLength_ShortestPathLenghtIsExtracted_ShortestPathLengthIsCalled()
         {
-            var users = new Mock<IShortest_Path_Visiting_All_Nodes_Garbage_Tests>();
-
-            var someGraph = new int[2][];
+            var shortestPathService = new Mock<IShortestPathService>();
+            
+            var anyGraph = new int[2][];
             var anyList = new List<int>();
+            var anyParentChild = new Dictionary<int, int>();
+            var anyDicGraph = new Dictionary<int, List<int>>();
+            var anyPositiveInteger = 1;
 
-            users.Setup(provider => provider.ShortestPathLength(someGraph)).Returns(1);
-            users.Setup(provider => provider.Foo(someGraph, anyList)).Returns(1);
+            shortestPathService.Setup(pathService => pathService.CalculateShortestPath(anyGraph, anyList, anyDicGraph, anyParentChild)).Returns(anyPositiveInteger);
+            var shortestPathVisitingAllNodes = new ShortestPathVisitingAllNodesGarbage(shortestPathService.Object);
 
-            users.Object.ShortestPathLength(someGraph);
-            users.Object.Foo(someGraph,anyList);
+            shortestPathVisitingAllNodes.ShortestPathLength(anyGraph);
 
-            users.Verify(provider => provider.Foo(someGraph, anyList), Times.Once);
+            shortestPathService.Verify(provider => provider.CalculateShortestPath(anyGraph, anyList, anyDicGraph, anyParentChild), Times.Once);
         }
         
         [TestMethod]
@@ -49,12 +53,12 @@ namespace UnitTesting
             var anyList = new List<int>();
 
             users.Setup(provider => provider.ShortestPathLength(someGraph)).Returns(1);
-            users.Setup(provider => provider.Foo(someGraph, anyList)).Returns(1);
+            users.Setup(provider => provider.CalculateShortestPath(someGraph, anyList)).Returns(1);
 
             users.Object.ShortestPathLength(someGraph);
-            users.Object.Foo(someGraph,anyList);
+            users.Object.CalculateShortestPath(someGraph,anyList);
 
-            users.Verify(provider => provider.Foo(someGraph, anyList), Times.Once);
+            users.Verify(provider => provider.CalculateShortestPath(someGraph, anyList), Times.Once);
         }
 
         [TestMethod]
