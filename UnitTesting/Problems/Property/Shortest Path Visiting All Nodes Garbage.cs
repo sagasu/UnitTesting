@@ -2,34 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnitTesting.Problems.Inheritance
+namespace UnitTesting.Problems.Property
 {
-    public interface IShortest_Path_Visiting_All_Nodes_Garbage
+    public interface IShortestPathVisitingAllNodesGarbage
     {
         int ShortestPathLength(int[][] graph);
     }
-    public interface IShortest_Path_Visiting_All_Nodes_Garbage_Tests
-    {
-        int ShortestPathLength(int[][] graph);
-        int CalculateShortestPath(int[][] graph, List<int> candidates);
-    }
-    internal class Shortest_Path_Visiting_All_Nodes_Garbage : IShortest_Path_Visiting_All_Nodes_Garbage, IShortest_Path_Visiting_All_Nodes_Garbage_Tests
+
+    internal class ShortestPathVisitingAllNodesGarbageProperty : IShortestPathVisitingAllNodesGarbage
     {
         // https://leetcode.com/problems/shortest-path-visiting-all-nodes/
         // Not my solution but true garbage
-        Dictionary<int, List<int>> _graph;
+        Dictionary<int, List<int>> graphDic;
         Dictionary<int, int> parentChild;
         int min = int.MaxValue;
 
-        public List<int> candidates2 { get; set; }
+        public List<int> Candidates { get; set; }
 
         public int ShortestPathLength(int[][] graph)
         {
-            _graph = new Dictionary<int, List<int>>();
+            graphDic = new Dictionary<int, List<int>>();
             parentChild = new Dictionary<int, int>();
-            var candidates = new List<int>();
+            Candidates = new List<int>();
             
-            return CalculateShortestPath(graph, candidates);
+            return CalculateShortestPath(graph, Candidates);
         }
 
         public int CalculateShortestPath(int[][] graph, List<int> candidates)
@@ -37,13 +33,14 @@ namespace UnitTesting.Problems.Inheritance
             min = int.MaxValue;
             for (var i = 0; i < graph.Length; i++)
             {
-                _graph.Add(i, new List<int>());
+                graphDic.Add(i, new List<int>());
+                if (graph[i] == null) return 0;
                 if (graph[i].Length == 1)
                 {
                     candidates.Add(i);
                 }
 
-                _graph[i] = graph[i].ToList();
+                graphDic[i] = graph[i].ToList();
             }
 
             if (candidates.Count == 0)
@@ -76,7 +73,7 @@ namespace UnitTesting.Problems.Inheritance
                 return true;
             }
             var res = false;
-            foreach (var nghr in _graph[current])
+            foreach (var nghr in graphDic[current])
             {
                 if (!seen.Contains(nghr) && nghr != parent)
                 {
